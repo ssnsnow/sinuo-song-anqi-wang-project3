@@ -1,14 +1,6 @@
-import React from 'react'
-import './style/Header.css';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 export default function HomePage() {
-  return (
-      <div className="centered">
-        <h1 className="moving-text">
-          <span className="green">Welcome </span>
-          <span className="grey"> To </span>
-          <span className="yellow"> Twitter</span>
-        </h1>
-      </div>
-  )
+  
 }

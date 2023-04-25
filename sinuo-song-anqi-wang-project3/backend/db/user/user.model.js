@@ -8,11 +8,21 @@ function createUser(user) {
     return UserModel.create(user);
 }
 
+function attemptLogin(username, password) {
+    return UserModel.findOne({ username: username, password: password }).exec();
+}
+
 function findUserByUsername(username) {
-    return UserModel.find({username: username}).exec();
+    return UserModel.findOne({username: username}).exec();
+}
+
+function findUserById(id) {
+    return UserModel.findById(id).exec();
 }
 
 module.exports = {
     createUser,
+    attemptLogin,
     findUserByUsername,
+    findUserById,
 }

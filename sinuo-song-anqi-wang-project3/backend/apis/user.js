@@ -3,12 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken')
 
 const UserModel = require('../db/user/user.model');
-
-const userDB = [];
-
-router.get('/', function(request, response) {
-    response.send(userDB);
-})
+const { findUserByToken } = require('./middleware');
 
 router.post('/', async function(request, response) {
     const body = request.body;
@@ -21,58 +16,57 @@ router.post('/', async function(request, response) {
 router.post('/login', async function(req, res) {
     const username = req.body.username;
     const password = req.body.password;
-
     try {
-        const createUserResponse = await UserModel.createUser({username: username, password: password})
+        const createUserResponse = await UserModel.attemptLogin(username, password)
 
-        const token = jwt.sign(username, "HUNTERS_PASSWORD")
+        if (!createUserResponse) {
+            return res.status(403).send("Invalid password")
+        }
 
-        res.cookie("username", token);
-        
-        return res.send("User created successfully")
+        const token = jwt.sign({ id: createUserResponse._id }, "HUNTERS_PASSWORD")
+        res.cookie("token", token);
+        return res.send("User logged in successfully")
     
     } catch (e) {
         res.status(401).send(null);
     }
 })
 
-router.post('/create', async function(req, res) {
+router.post('/register', async function(req, res) {
     const username = req.body.username;
     const password = req.body.password;
 
-    const createUserResponse = await UserModel.createUser({username: username, password: password})
+    try {
+        if(!username || !password) {
+            return res.status(409).send("Missing username or password")
+        }
 
-    res.cookie("username", username);
+        const createUserResponse = await UserModel.createUser({username: username, password: password});
+
+        const token = jwt.sign({ id: createUserResponse._id }, "HUNTERS_PASSWORD")
+
+        res.cookie("token", token);
+        
+        return res.send("User created successfully")
     
-    return res.send("User created successfully")
+    } catch (e) {
+        res.status(401).send("Error: username already exists");
+    }
 })
 
-router.get('/isLoggedIn', async function(req, res) {
+router.get('/isLoggedIn', findUserByToken, async function(req, res) {
 
-    const username = req.cookies.username;
-
-    if(!username) {
-        return res.send({username: null})
+    const user = req.user;
+    if (!user) {
+        return res.send({ username: null });
     }
-    let decryptedUsername;
-    try {
-        decryptedUsername = jwt.verify(username, "HUNTERS_PASSWORD")
-    } catch(e) {
-        return res.send({username: null})
-    }
-    
-    if(!decryptedUsername) {
-
-        return res.send({username: null})
-    } else {
-        return res.send({username: decryptedUsername})
-    }
+    return res.send({ username: user.username })
 
 })
 
 router.post('/logOut', async function(req, res) {
 
-    res.cookie('username', '', {
+    res.cookie('token', '', {
         maxAge: 0,
     })
 
@@ -88,5 +82,12 @@ router.get('/:username', async function(req, res) {
 
     return res.send(userData);
 })
+
+router.put('/update', findUserByToken, async function (req, res) {
+    req.username.bio = req.body.bio;
+    await req.username.save();
+    return res.send(req.username);
+})
+
 
 module.exports = router

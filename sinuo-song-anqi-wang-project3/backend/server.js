@@ -1,7 +1,8 @@
+require('dotenv').config();
 const express = require('express');
-const helper = require('./apis/helper');
 const pokemon = require('./apis/pokemon')
 const users = require('./apis/user')
+const posts = require('./apis/post')
 const app = express();
 const mongoose = require('mongoose')
 const cors = require('cors')
@@ -9,7 +10,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser');
 
 
-const mongoDBEndpoint = 'mongodb+srv://ssnjd123:2012icigroupA%40@neuwebdev.ninnrzm.mongodb.net/test?retryWrites=true&w=majority';
+const mongoDBEndpoint = process.env.mongo_uri;
 mongoose.connect(mongoDBEndpoint,  { useNewUrlParser: true });
 
 const db = mongoose.connection;
@@ -23,6 +24,7 @@ app.use(cookieParser());
 
 app.use('/api/pokemon/', pokemon);
 app.use('/api/users/', users)
+app.use('/api/posts/', posts)
 
 
 
