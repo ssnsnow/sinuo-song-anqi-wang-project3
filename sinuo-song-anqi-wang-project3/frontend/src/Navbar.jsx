@@ -1,10 +1,9 @@
 import { useNavigate } from 'react-router'
 import axios from 'axios';
-import React, { useEffect, useState, useParams } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function () {
   const navigate = useNavigate();
-  const params = useParams()
 
   const [activeUsername, setActiveUsername] = useState(null)
   const [postDate, setPostDate] = useState('');
@@ -37,7 +36,8 @@ export default function () {
   async function submitPost() {
     try {
         setNewPostDate();
-        const response = await axios.post('/api/posts/create', {content: post, user: params.users})
+        const userData = await axios.get(`/api/users/${activeUsername}`)
+        const response = await axios.post('/api/posts/create', {content: post, user: userData.data._id})
         setPost('');
     } catch (e) {
         console.log(e)

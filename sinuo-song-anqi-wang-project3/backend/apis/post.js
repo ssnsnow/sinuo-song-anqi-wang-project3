@@ -5,14 +5,15 @@ const PostModel = require('../db/post/post.model');
 const { findUserByToken } = require('./middleware');
 
 router.post('/create', findUserByToken, async function(request, response) {
-    const body = request.body;
-    
+    const content = request.body.content;
+    const userId = request.body.user;
+    console.log("hi")
     try {
-      if(!postContent) {
+      if(!content) {
           return response.status(409).send("Missing post content")
       }
-
-      const newPostResponse = await PostModel.createPost(body, request.user._id)
+      const newPostResponse = await PostModel.createPost({content: content, user: userId})
+      console.log("newPostResponse", newPostResponse)
       res.json(newPostResponse);
 
     } catch (e) {
