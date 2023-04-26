@@ -50,14 +50,6 @@
   margin-bottom: '10px';
   margin-left: '20px';
 }
-
-.page-layout {
-  margin: 20px;
-}
-
-.body {
-  margin: 50px;
-}
   
 @media (min-width: 1025px) {
   .h-custom-2 {

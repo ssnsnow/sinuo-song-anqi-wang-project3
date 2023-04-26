@@ -26,7 +26,6 @@ router.put('/:postId', findUserByToken, async function (req, res) {
   const body = req.body;
 
   const post = await PostModel.updatePost(postId, body, req.user._id);
-
   res.json(post);
 })
 

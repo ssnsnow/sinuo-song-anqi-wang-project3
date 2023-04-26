@@ -20,14 +20,12 @@ function App() {
   return (
     <UserContext.Provider value={{activeUsername, setActiveUsername}}>
       <BrowserRouter>
-        <Navbar/>
         <Routes>
           <Route path = "/" element = {<PostsHomePage/>}/>
           <Route path = "/login" element={<Login/>} />
           <Route path = "/register" element={<CreateUser/>} />
         </Routes>
       </BrowserRouter>
-
     </UserContext.Provider>
       
     )
