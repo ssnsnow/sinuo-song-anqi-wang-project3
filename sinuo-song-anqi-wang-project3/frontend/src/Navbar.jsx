@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router'
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext} from 'react';
+import { UserContext } from './App';
 
 export default function () {
   const navigate = useNavigate();
+  const { activeUsername, setActiveUsername } = useContext(UserContext);
 
-  const [activeUsername, setActiveUsername] = useState(null)
-  const [postDate, setPostDate] = useState('');
+  // const [activeUsername, setActiveUsername] = useState(null)
   const [post, setPost] = useState('')
   const [postError, setPostError] = useState('')
 
@@ -15,30 +16,16 @@ export default function () {
     setPost(post);
   }
 
-  function setNewPostDate() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const hours = currentDate.getHours().toString().padStart(2, '0');
-    const minutes = currentDate.getMinutes().toString().padStart(2, '0');
-    const seconds = currentDate.getSeconds().toString().padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    setPostDate(formattedDate);
-  }
-
   async function checkIfUserIsLoggedIn() {
       const response = await axios.get('/api/users/isLoggedIn')
-
       setActiveUsername(response.data.username)
   }
 
   async function submitPost() {
     try {
-        setNewPostDate();
-        const userData = await axios.get(`/api/users/${activeUsername}`)
-        const response = await axios.post('/api/posts/create', {content: post, user: userData.data._id})
+        const response = await axios.post('/api/posts/create', {content: post})
         setPost('');
+        window.location.reload(false);
     } catch (e) {
         console.log(e)
         setPostError(e.response)
@@ -46,8 +33,17 @@ export default function () {
     console.log(post);
   }
 
+  useEffect(() => {
+      checkIfUserIsLoggedIn()
+  }, []);
+
+  async function logOutUser() {
+      await axios.post('/api/users/logOut')
+      setActiveUsername(null)
+  }
+
   const postArea = 
-  <form className="d-flex input-group w-auto">
+  <form className="d-flex input-group w-50 px-3">
     <input
       type="search"
       className="form-control"
@@ -66,15 +62,6 @@ export default function () {
     </button>
   </form>
 
-  useEffect(() => {
-      checkIfUserIsLoggedIn()
-  }, []);
-
-  async function logOutUser() {
-      await axios.post('/api/users/logOut')
-      setActiveUsername(null)
-  }
-
   const LogoutComponent = 
   <div className="d-flex align-items-center">
     <a className="nav-link" href="/login">
@@ -91,7 +78,7 @@ export default function () {
 
   const loggedinComponent = 
   <div className="d-flex align-items-center">
-    <span className="navbar-text">
+    <span className="navbar-text px-3">
       Welcome, {activeUsername}
     </span>
     <a className="nav-link" onClick={logOutUser}>
@@ -108,7 +95,7 @@ export default function () {
 
   return (
     <div>
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div className="container-fluid">
         <button
           className="navbar-toggler"
@@ -125,7 +112,7 @@ export default function () {
         <div className="collapse navbar-collapse" id="navbarButtonsExample">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link" href="/">Home</a>
+              <a className="nav-link" href="/">TwitBird</a>
             </li>
           </ul>
           {logginginPostComponent}

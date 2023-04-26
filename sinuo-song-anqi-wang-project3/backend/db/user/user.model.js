@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const UserSchema = require('./user.schema').UserSchema;
 
-const UserModel = mongoose.model("UserModel", UserSchema);
+const UserModel = mongoose.model("users", UserSchema);
 
 function createUser(user) {
     return UserModel.create(user);
@@ -13,7 +13,7 @@ function attemptLogin(username, password) {
 }
 
 function findUserByUsername(username) {
-    return UserModel.findOne({username: username}).exec();
+    return UserModel.findOne({ username: username }).populate("posts").exec();
 }
 
 function findUserById(id) {

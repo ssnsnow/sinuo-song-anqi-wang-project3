@@ -5,19 +5,18 @@ const PostModel = require('../db/post/post.model');
 const { findUserByToken } = require('./middleware');
 
 router.post('/create', findUserByToken, async function(request, response) {
-    const content = request.body.content;
-    const userId = request.body.user;
-    console.log("hi")
+    const body = request.body;
+    
     try {
-      if(!content) {
+      if(!body) {
           return response.status(409).send("Missing post content")
       }
-      const newPostResponse = await PostModel.createPost({content: content, user: userId})
-      console.log("newPostResponse", newPostResponse)
-      res.json(newPostResponse);
+      const newPostResponse = await PostModel.createPost(body, request.user._id)
+      response.json(newPostResponse);
 
     } catch (e) {
       response.send(e);
+      console.log(e)
     }
     
 })
@@ -31,9 +30,8 @@ router.put('/:postId', findUserByToken, async function (req, res) {
   res.json(post);
 })
 
-router.get('/', async function (req, res) {
+router.get('/allPosts', async function (req, res) {
   const allPosts = await PostModel.getAllPosts();
-
   res.send(allPosts);
 }
 )

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router'
+import Navbar from './Navbar';
 
 export default function CreateUser() {
     const [usernameInput, setUsernameInput] = useState('');
@@ -44,16 +45,30 @@ export default function CreateUser() {
 
     return (
         <div>
-            <h1>Register New User</h1>
-            {!!error && <h3>{error}</h3>}
-            <div>
-                <span>Username: </span><input type='text' value={usernameInput} onInput={setUsername}></input>
-            </div>
-            <div>
-                <span>Password: </span><input type='text' value={passwordInput} onInput={setPassword}></input>
-            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh',flexDirection: 'column' }}>
+                <h1 class="mb-3">Register</h1>
+                <form className="w-50">
+                    <div className="form-outline mb-4">
+                        <input type="email" id="form2Example1" className="form-control" value={usernameInput} onInput={setUsername}/>
+                        <label className="form-label" htmlFor="form2Example1">UserName</label>
+                    </div>
 
-            <button onClick={submit}>Create Account and Log In</button>
+                    <div className="form-outline mb-4">
+                        <input type="password" id="form2Example2" className="form-control" value={passwordInput} onInput={setPassword}/>
+                        <label className="form-label" htmlFor="form2Example2">Password</label>
+                    </div>
+
+                    <button type="button" className="btn btn-primary btn-block mb-4" onClick={submit}>Register</button>
+                </form>
+                {!!error && 
+                <div className="d-flex column">
+                    <i className="fas fa-circle-exclamation me-2"></i>
+                    <div className="errorMessage">
+                        {error}
+                    </div>
+                </div>
+                }
+            </div>
         </div>
     )
 

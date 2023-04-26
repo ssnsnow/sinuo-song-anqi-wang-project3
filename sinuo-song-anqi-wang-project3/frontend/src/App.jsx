@@ -1,24 +1,36 @@
 import { useState } from 'react'
 import axios from 'axios'
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
-import HomePage from './HomePage';
 import Navbar from './Navbar';
-import Pokemons from './Pokemons';
+import { createContext } from 'react';
+import HomePage from './HomePage';
+import Login from './Login';
+import CreateUser from './CreateUser';
+import PostsHomePage from './PostsHomePage';
+
+export const UserContext = createContext({
+  activeUsername: '',
+  setActiveUsername: () => {}
+});
 
 function App() {
+  const [activeUsername, setActiveUsername] = useState('');
+
   return (
-    <div>
-      <Navbar/>
-      <HomePage />
-    {/* <Routes>
-      <Route path = "/" element = {<HomePage/>}/>
-      <Route path = "/login" element={<Login/>} />
-      <Route path = "/register" element={<CreateUser/>} />
-      <Route path = "/getPokemons" element={<Pokemons/>} />
-    </Routes> */}
-    </div>
-  )
+    <UserContext.Provider value={{activeUsername, setActiveUsername}}>
+      <BrowserRouter>
+        <Navbar/>
+        <Routes>
+          <Route path = "/" element = {<PostsHomePage/>}/>
+          <Route path = "/login" element={<Login/>} />
+          <Route path = "/register" element={<CreateUser/>} />
+        </Routes>
+      </BrowserRouter>
+
+    </UserContext.Provider>
+      
+    )
 }
 
 export default App;

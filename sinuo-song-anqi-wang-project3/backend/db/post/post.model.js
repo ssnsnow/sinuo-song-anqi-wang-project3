@@ -2,14 +2,14 @@ const mongoose = require("mongoose")
 
 const PostSchema = require('./post.schema').PostSchema;
 
-const PostModel = mongoose.model("PostModel", PostSchema);
+const PostModel = mongoose.model("posts", PostSchema);
 
 function createPost(post, userId) {
     return PostModel.create({ ...post, user: userId });
 }
 
 function getAllPosts() {
-    return PostModel.find({}).exec();
+    return PostModel.find({}).populate("user").sort({ datePosted: 'desc' }).exec();
 }
 
 function updatePost(postId, post, userId) {

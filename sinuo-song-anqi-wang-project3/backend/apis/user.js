@@ -18,9 +18,12 @@ router.post('/login', async function(req, res) {
     const password = req.body.password;
     try {
         const createUserResponse = await UserModel.attemptLogin(username, password)
+        if (!username) {
+            return res.status(403).send("Error: mmpty username")
+        }
 
         if (!createUserResponse) {
-            return res.status(403).send("Invalid password")
+            return res.status(403).send("Error: invalid password")
         }
 
         const token = jwt.sign({ id: createUserResponse._id }, "HUNTERS_PASSWORD")
@@ -74,7 +77,7 @@ router.post('/logOut', async function(req, res) {
 
 });
 
-router.get('/:username', async function(req, res) {
+router.get('/lookup/:username', async function(req, res) {
     const username = req.params.username;
 
     const userData = await 
