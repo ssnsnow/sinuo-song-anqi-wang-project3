@@ -1,5 +1,6 @@
 {
   "name": "sinuo-song-anqi-wang-project3",
+  "proxy": "http://localhost:8000",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -21,8 +22,6 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ssnsnow/sinuo-song-anqi-wang-project3/issues"
-  },
-  "dependencies": {
   },
   "devDependencies": {
     "concurrently": "^8.0.1"
