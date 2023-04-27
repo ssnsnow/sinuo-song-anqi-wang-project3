@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const pokemon = require('./apis/pokemon')
 const users = require('./apis/user')
 const posts = require('./apis/post')
 const app = express();
@@ -21,12 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
-app.use('/api/pokemon/', pokemon);
 app.use('/api/users/', users)
 app.use('/api/posts/', posts)
-
-
 
 let frontend_dir = path.join(__dirname, '..', 'frontend', 'dist')
 
@@ -41,19 +36,3 @@ app.get('*', function (req, res) {
 app.listen(process.env.PORT || 8000, function() {
     console.log("Starting server now...")
 })
-
-
-
-// const http = require('http');
-
-// const server = http.createServer(function (request, response) {
-
-//     response.writeHead(200, { 'Content-Type': 'text/plain' });
-//     response.end('Hello web dev!');
-
-// })
-
-// // 127.0.0.1 === localhost
-// server.listen(8000, "127.0.0.1", function() {
-//     console.log("The server has started!")
-// })

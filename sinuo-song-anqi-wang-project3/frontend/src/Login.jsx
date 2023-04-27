@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router'
-import Navbar from './Navbar';
 
 export default function Login() {
     const [usernameInput, setUsernameInput] = useState('');
@@ -34,7 +33,6 @@ export default function Login() {
 
     return (
         <div>
-            <Navbar/>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh',flexDirection: 'column' }}>
                 <h1 className="mb-3">Log In</h1>
                 <form className="w-50">

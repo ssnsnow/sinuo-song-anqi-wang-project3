@@ -4,33 +4,11 @@ import React, { useEffect, useState, useContext} from 'react';
 import { UserContext } from './App';
 
 export default function () {
-  const navigate = useNavigate();
   const { activeUsername, setActiveUsername } = useContext(UserContext);
-
-  // const [activeUsername, setActiveUsername] = useState(null)
-  const [post, setPost] = useState('')
-  const [postError, setPostError] = useState('')
-
-  function setNewPost(event) {
-    const post = event.target.value;
-    setPost(post);
-  }
 
   async function checkIfUserIsLoggedIn() {
       const response = await axios.get('/api/users/isLoggedIn')
       setActiveUsername(response.data.username)
-  }
-
-  async function submitPost() {
-    try {
-        const response = await axios.post('/api/posts/create', {content: post})
-        setPost('');
-        window.location.reload(false);
-    } catch (e) {
-        console.log(e)
-        setPostError(e.response)
-    }
-    console.log(post);
   }
 
   useEffect(() => {
@@ -41,26 +19,6 @@ export default function () {
       await axios.post('/api/users/logOut')
       setActiveUsername(null)
   }
-
-  const postArea = 
-  <form className="d-flex input-group w-50 px-3">
-    <input
-      type="search"
-      className="form-control"
-      placeholder="New post"
-      aria-label="Search"
-      value = {post}
-      onInput = {setNewPost}
-    />
-    <button
-      className="btn btn-outline-primary"
-      type="button"
-      data-mdb-ripple-color="dark"
-      onClick={submitPost}
-    >
-      Post
-    </button>
-  </form>
 
   const LogoutComponent = 
   <div className="d-flex align-items-center">
@@ -88,9 +46,6 @@ export default function () {
     </a>
   </div>
 
-  const logginginPostComponent = activeUsername ? postArea : null;
-
-
   const loggingComponent = activeUsername ? loggedinComponent : LogoutComponent;
 
   return (
@@ -115,7 +70,6 @@ export default function () {
               <a className="nav-link" href="/">TwitBird</a>
             </li>
           </ul>
-          {logginginPostComponent}
           {loggingComponent}
         </div>
       </div>

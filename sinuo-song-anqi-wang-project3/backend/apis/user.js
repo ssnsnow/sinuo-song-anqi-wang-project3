@@ -19,7 +19,7 @@ router.post('/login', async function(req, res) {
     try {
         const createUserResponse = await UserModel.attemptLogin(username, password)
         if (!username) {
-            return res.status(403).send("Error: mmpty username")
+            return res.status(403).send("Error: Empty username")
         }
 
         if (!createUserResponse) {
@@ -87,9 +87,9 @@ router.get('/lookup/:username', async function(req, res) {
 })
 
 router.put('/update', findUserByToken, async function (req, res) {
-    req.username.bio = req.body.bio;
-    await req.username.save();
-    return res.send(req.username);
+    req.user.bio = req.body.bio;
+    await req.user.save();
+    return res.send(req.user);
 })
 
 

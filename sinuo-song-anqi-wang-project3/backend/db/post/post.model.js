@@ -13,7 +13,15 @@ function getAllPosts() {
 }
 
 function updatePost(postId, post, userId) {
-    return PostModel.findOneAndUpdate({ _id: postId, user: userId }, post, { new: true }).exec();
+  return PostModel.findOneAndUpdate({ _id: postId, user: userId }, 
+    {
+        $set: 
+        { 
+            "content" : post.content, 
+            "datePosted" : new Date()
+        }
+    }, 
+    { new: true }).exec();
 }
 
 function deletePost(postId, userId) {

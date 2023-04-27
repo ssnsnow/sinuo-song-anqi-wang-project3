@@ -16,7 +16,6 @@ router.post('/create', findUserByToken, async function(request, response) {
 
     } catch (e) {
       response.send(e);
-      console.log(e)
     }
     
 })

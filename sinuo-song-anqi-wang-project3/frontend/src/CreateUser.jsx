@@ -1,12 +1,10 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router'
-import Navbar from './Navbar';
 
 export default function CreateUser() {
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
-    const [createDate, setCreateDate] = useState('');
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
@@ -23,7 +21,7 @@ export default function CreateUser() {
 
     async function submit() {
         try {
-            const response = await axios.post('/api/users/register', {username: usernameInput, password: passwordInput, createDate: createDate})
+            const response = await axios.post('/api/users/register', {username: usernameInput, password: passwordInput})
             navigate('/')
         } catch (e) {
             console.log(e)
